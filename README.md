@@ -21,6 +21,15 @@ Installation required :
     - svox (pico2wave) http://packages.debian.org/source/sid/svox
     - Python install gtk (sudo apt-get install python-gtk2-dev)
 
+How to use this script:
+
+selected your text and copy (ctrl + c) and executed a command terminal
+    
+    - $ ./text2wav.py
+
+In the directory will generate the article1.wav file article2.wav ...
+good listening.
+
 
 TODO:
     Development of the text file part and manage multiple text file so
