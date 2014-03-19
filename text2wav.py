@@ -74,23 +74,29 @@ def casier_txt(list_txt):
     return list_chapter
 
 def text_to_speech(txt):
+    txt = txt.replace('"','')
     total_letter = len(txt)
-    list_txt = txt.split('.')
-    list_txt = filter(None, list_txt)
+    if total_letter > 1:
+        list_txt = txt.split('.')
+        list_txt = filter(None, list_txt)
+    else:
+        list_txt = []
+        list_txt = u"Pas de texte trouvé."
     
     if list_txt:
         position = casier_txt(list_txt)
         
     else:
         return "pas de phrase"
-
+        
+    os.system('rm article*.wav')
     for index,value in enumerate(position):
         value =' '.join(value)
         print "Traduction en cours..."
         os.system('pico2wave -l fr-FR -w article%d.wav "%s"' % (index+1,value))
         print "Création du fichier : article%d.wav" % (index+1)
         
-    return "Votre traduction est terminer"
+    return "Votre traduction est terminée"
     
 
 def main(argv):
