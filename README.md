@@ -2,6 +2,7 @@ Pico_read_speaker
 =================
 
 Using Pico2wave to ease from the recovery text to the clipboard or a file so unlimited.
+
 Pico2wave takes into account a limited number of characters, my program solves this problem.
 
 Why this script: I love listening to my book on my mobile N900 while I
@@ -34,8 +35,3 @@ selected your text and copy (ctrl+c) and executed a command terminal
 In the current directory of "text2wav.py" it will generate the article1.wav file article2.wav ...
 
 Good listening.
-
-
-TODO:
-    Development of the text file part and manage multiple text file so
-    ilimiter vocalize books completely.
