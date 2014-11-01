@@ -5,15 +5,17 @@
 
 u"""
 Auteur : Mickaelh
+version : 1.0.0
 Licence : GPL v3
 
 Description : Using pico2wave to ease from the recovery text to the
     clipboard or a file so unlimited.
+    pico2wave takes into account a limited number of characters, my program solves this problem.
 
 System : the compliant systems under linux kernels: Debian, Ubuntu, Maemo ...
 
 Installation required :
-    - svox (pico2wave) http://packages.debian.org/source/sid/svox
+    - svox (pico2wave) https://packages.debian.org/source/squeeze/svox
     - Python install gtk (sudo apt-get install python-gtk2-dev)
 
 Why this script: I love listening to my book on my mobile N900 while I
@@ -33,15 +35,18 @@ TODO:
 """
 
 
- 
+
 import os, sys, gtk, getopt
 
+#limit char of pico2wave
 limit_char = 30000
 
+# get text from (ctrl + c)
 def text_clipboard():
     clipboard = gtk.clipboard_get()
     return clipboard.wait_for_text()
 
+#get text from file
 def text_file(arg):
     try:
         f = open(arg, 'r')
@@ -49,6 +54,7 @@ def text_file(arg):
         return "Erreur: le fichier est introuvable"
     return f.read()
 
+#cut the text by sentence
 def casier_txt(list_txt):
     current_letter=0
     list_sentence = []
@@ -70,9 +76,10 @@ def casier_txt(list_txt):
 
     if list_sentence:
         list_chapter.append(list_sentence)
-        
+
     return list_chapter
 
+# execute command line pico2wave
 def text_to_speech(txt):
     txt = txt.replace('"','')
     total_letter = len(txt)
@@ -82,25 +89,25 @@ def text_to_speech(txt):
     else:
         list_txt = []
         list_txt = u"Pas de texte trouvé."
-    
+
     if list_txt:
         position = casier_txt(list_txt)
-        
+
     else:
         return "pas de phrase"
-        
+
     os.system('rm article*.wav')
     for index,value in enumerate(position):
-        value =' '.join(value)
-        print "Traduction en cours..."
-        os.system('pico2wave -l fr-FR -w article%d.wav "%s"' % (index+1,value))
-        print "Création du fichier : article%d.wav" % (index+1)
-        
+        if value:
+            value =' '.join(value)
+            print "Traduction en cours..."
+            os.system('pico2wave -l fr-FR -w article%d.wav "%s"' % (index+1,value))
+            print "Création du fichier : article%d.wav" % (index+1)
+
     return "Votre traduction est terminée"
-    
+
 
 def main(argv):
-    text_file = ''
     try:
       opts, args = getopt.getopt(argv,"hi:",["help","input_text_file="])
     except getopt.GetoptError:
@@ -116,7 +123,7 @@ def main(argv):
              txt = text_file(arg)
     else:
         txt = text_clipboard()
-        
+
     print text_to_speech(txt)
 
 if __name__ == "__main__":
