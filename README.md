@@ -2,7 +2,7 @@ Pico_read_speaker
 =================
 
 Using Pico2wave to ease from the recovery text to the clipboard or a file so unlimited.
-pico2wave takes into account a limited number of characters, my program solves this problem.
+Pico2wave takes into account a limited number of characters, my program solves this problem.
 
 Why this script: I love listening to my book on my mobile N900 while I
     drove on the road to work
