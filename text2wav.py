@@ -51,7 +51,7 @@ def text_file(arg):
     try:
         f = open(arg, 'r')
     except IOError:
-        return "Erreur: le fichier est introuvable"
+        return "Error: file not found"
     return f.read()
 
 #cut the text by sentence
@@ -80,7 +80,11 @@ def casier_txt(list_txt):
     return list_chapter
 
 # execute command line pico2wave
-def text_to_speech(txt):
+def text_to_speech(txt,lang):
+    list_lang = ['en-US','en-GB','de-DE','es-ES','fr-FR','it-IT']
+    if lang not in list_lang:
+        lang = 'en-US'
+
     txt = txt.replace('"','')
     total_letter = len(txt)
     if total_letter > 1:
@@ -88,43 +92,67 @@ def text_to_speech(txt):
         list_txt = filter(None, list_txt)
     else:
         list_txt = []
-        list_txt = u"Pas de texte trouvé."
+        list_txt = u"No text found."
 
     if list_txt:
         position = casier_txt(list_txt)
 
     else:
-        return "pas de phrase"
+        return "no sentence"
 
     os.system('rm article*.wav')
     for index,value in enumerate(position):
         if value:
             value =' '.join(value)
-            print "Traduction en cours..."
-            os.system('pico2wave -l fr-FR -w article%d.wav "%s"' % (index+1,value))
-            print "Création du fichier : article%d.wav" % (index+1)
+            print "Translating in %s ..." % (lang)
+            os.system('pico2wave -l %s -w article%d.wav "%s"' % (lang, index+1, value))
+            print "File Creation : article%d.wav" % (index+1)
 
-    return "Votre traduction est terminée"
+    return "Your translation is complete"
 
 
 def main(argv):
+    lang = ''
     try:
-      opts, args = getopt.getopt(argv,"hi:",["help","input_text_file="])
+        opts, args = getopt.getopt(argv,"hi:l:",["help","input_text_file=","lang="])
     except getopt.GetoptError:
-      print 'lecture_audio.py -i <input text file>'
-      sys.exit(2)
+        sys.exit(2)
 
     if opts:
         for opt, arg in opts:
-          if opt in ('-h','--help'):
-             print 'lecture_audio.py -i <input text file>'
-             sys.exit()
-          elif opt in ("-i", "--input_text_file"):
-             txt = text_file(arg)
+            if opt in ('-l','--lang'):
+                lang = arg
+            else:
+                lang = 'en-US'
+
+            if opt in ('-h','--help'):
+                print '''Usage: text2wav.py [option] [-i|--input_text_file text_file]
+
+Without -i option verifies if there is a text copied to clipboard
+
+Options:
+    -i, --input_text_file   reads a text file
+    -l, --lang  Language (default: "en-US")
+
+Options lang:
+    en-US   English
+    en-GB   Great Britain
+    de-DE   German
+    es-ES   Spanish
+    fr-FR   French
+    it-IT   Italian
+
+Help option:
+    -h,--help   show this message'''
+                sys.exit()
+            elif opt in ('-i', '--input_text_file'):
+                txt = text_file(arg)
+            else:
+                txt = text_clipboard()
     else:
         txt = text_clipboard()
 
-    print text_to_speech(txt)
+    print text_to_speech(txt,lang)
 
 if __name__ == "__main__":
    main(sys.argv[1:])
