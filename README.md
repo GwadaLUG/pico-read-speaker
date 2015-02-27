@@ -27,7 +27,9 @@ Installation required :
     - Python install gtk: $ sudo apt-get install python-gtk2-dev
 
 Svox package maemo dispnible on https://openrepos.net/
+
 installation order:
+
     - libttspico-data (https://openrepos.net/content/mickaelh/libttspico-data)
     - libttspico0 (https://openrepos.net/content/mickaelh/libttspico0)
     - libttspico-utils (https://openrepos.net/content/mickaelh/libttspico-utils)
