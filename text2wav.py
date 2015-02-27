@@ -16,7 +16,15 @@ System : the compliant systems under linux kernels: Debian, Ubuntu, Maemo ...
 
 Installation required :
     - svox (pico2wave) https://packages.debian.org/source/squeeze/svox
-    - Python install gtk (sudo apt-get install python-gtk2-dev)
+    - Python install gtk : $ sudo apt-get install python-gtk2-dev
+
+Svox package maemo dispnible on https://openrepos.net/
+installation order:
+    - libttspico-data (https://openrepos.net/content/mickaelh/libttspico-data)
+    - libttspico0 (https://openrepos.net/content/mickaelh/libttspico0)
+    - libttspico-utils (https://openrepos.net/content/mickaelh/libttspico-utils)
+    - libttspico-dev (https://openrepos.net/content/mickaelh/libttspico-dev)
+
 
 Why this script: I love listening to my book on my mobile N900 while I
     drove on the road to work
