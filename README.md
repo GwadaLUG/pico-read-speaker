@@ -40,9 +40,12 @@ How to use this script
 
 selected your text and copy (ctrl+c) and executed a command terminal
 
-    $ ./text2wav.py [-l|--lang en-US]
+    $ ./text2wav.py [-l|--lang fr-FR]
     or
-    $ ./text2wav.py -i <input text file> [-l|--lang en-US]
+    $ ./text2wav.py -i <input text file> [-l|--lang fr-FR]
+
+note:
+the optional parameter [-l | --lang] by default = en-US
 
 In the current directory of "text2wav.py" it will generate the article1.wav file article2.wav ...
 
