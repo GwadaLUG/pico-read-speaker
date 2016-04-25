@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-#Transforme le texte en audio
+#Transform text in wav audio
 #exec : text2wav.py
 
 u"""
-Auteur : Mickaelh
-version : 1.0.0
+Auteur  : Mickaelh
+version : 1.1.0
 Licence : GPL v3
 
 Description : Using pico2wave to ease from the recovery text to the
@@ -34,8 +34,9 @@ How to use this script:
     - selected your text and copy (ctrl + c) and executed a command terminal
     $ ./text2wav.py
 
-In the current directory of text2wav.py it will generate the article1.wav file article2.wav ...
-good listening.
+In the current directory of text2wav.py it will generate only one file, named chapter.wav
+I you want it in mp3 and you have ffmpeg installed, uncomment line 155
+Good listening.
 
 TODO:
     Development of the text file part and manage multiple text file so
@@ -44,10 +45,12 @@ TODO:
 
 
 
-import os, sys, gtk, getopt
+import os, sys, gtk, getopt, wave
 
 #limit char of pico2wave
 limit_char = 30000
+#choose default language between: 'en-US','en-GB','de-DE','es-ES','fr-FR','it-IT'
+default_lang = 'en-US'
 
 # get text from (ctrl + c)
 def text_clipboard():
@@ -87,11 +90,42 @@ def casier_txt(list_txt):
 
     return list_chapter
 
+def joinwavs(outfile = "chapter.wav"):
+    infiles = []
+
+    for root, dirs, files in os.walk(os.getcwd()):
+        for f in files:
+            if f.startswith('article') and f.endswith('.wav'):
+                infiles.append(f)
+
+    if len(infiles) > 1:
+        data = []
+        for infile in infiles:
+            w = wave.open(infile, 'rb')
+            data.append( [w.getparams(), w.readframes(w.getnframes())] )
+            w.close()
+
+        output = wave.open(outfile, 'wb')
+        output.setparams(data[0][0])
+        for params,frames in data:
+            output.writeframes(frames)
+        output.close()
+    else:
+        os.system('rm %s' % outfile)
+        os.system('mv %s %s' % (infiles[0], outfile))
+    return outfile
+
+def wav2mp3(infile = "chapter.wav"):
+    outfile = ' %s.mp3' % infile[:-4]
+    os.system('ffmpeg -i %s %s' % (infile, outfile))
+    os.system('rm %s' % infile)
+    return outfile
+
 # execute command line pico2wave
 def text_to_speech(txt,lang):
     list_lang = ['en-US','en-GB','de-DE','es-ES','fr-FR','it-IT']
     if lang not in list_lang:
-        lang = 'en-US'
+        lang = default_lang
 
     txt = txt.replace('"','')
     total_letter = len(txt)
@@ -106,18 +140,21 @@ def text_to_speech(txt,lang):
         position = casier_txt(list_txt)
 
     else:
-        return "no sentence"
+        return "No sentence"
 
     os.system('rm article*.wav')
     for index,value in enumerate(position):
         if value:
             value =' '.join(value)
-            print "Translating in %s ..." % (lang)
-            os.system('pico2wave -l %s -w article%d.wav "%s"' % (lang, index+1, value))
-            print "File Creation : article%d.wav" % (index+1)
+            print("Translating in %s ..." % (lang))
+            os.system('pico2wave -l %s -w article%02d.wav "%s"' % (lang, index+1, value))
+            print("File Creation: article%02d.wav" % (index+1))
 
-    return "Your translation is complete"
+    outfile = joinwavs()
+    #If you have ffmpeg installed:
+    #outfile = wav2mp3()
 
+    return "Speech complete!. The result is in: %s" % outfile
 
 def main(argv):
     lang = ''
@@ -131,16 +168,17 @@ def main(argv):
             if opt in ('-l','--lang'):
                 lang = arg
             else:
-                lang = 'en-US'
+                lang = default_lang
 
             if opt in ('-h','--help'):
-                print '''Usage: text2wav.py [option] [-i|--input_text_file text_file]
+                print(
+'''Usage: text2wav.py [option] [-i|--input_text_file text_file]
 
 Without -i option verifies if there is a text copied to clipboard
 
 Options:
     -i, --input_text_file   reads a text file
-    -l, --lang  Language (default: "en-US")
+    -l, --lang  Language (default: "%s")
 
 Options lang:
     en-US   English
@@ -152,6 +190,7 @@ Options lang:
 
 Help option:
     -h,--help   show this message'''
+                % default_lang )
                 sys.exit()
             elif opt in ('-i', '--input_text_file'):
                 txt = text_file(arg)
@@ -160,7 +199,7 @@ Help option:
     else:
         txt = text_clipboard()
 
-    print text_to_speech(txt,lang)
+    print(text_to_speech(txt,lang))
 
 if __name__ == "__main__":
    main(sys.argv[1:])
