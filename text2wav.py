@@ -125,12 +125,12 @@ def wav2mp3(infile = "audio_book.wav"):
     return outfile
 
 # execute command line pico2wave
-def text_to_speech(txt,lang):
-    list_lang = ['en-US','en-GB','de-DE','es-ES','fr-FR','it-IT']
+def text_to_speech(txt, lang):
+    list_lang = ['en-US', 'en-GB', 'de-DE', 'es-ES', 'fr-FR', 'it-IT']
     if lang not in list_lang:
         lang = default_lang
 
-    txt = txt.replace('"','')
+    txt = txt.replace('"', '')
     total_letter = len(txt)
     if total_letter > 1:
         list_txt = txt.split('.')
@@ -145,19 +145,16 @@ def text_to_speech(txt,lang):
     else:
         return "No sentence"
 
-    os.system('rm voice_clips*.wav')
     for index,value in enumerate(position):
         if value:
             value =' '.join(value)
-            print("Translating in %s ..." % (lang))
-            os.system('pico2wave -l %s -w voice_clips%03d.wav "%s"' % (lang, index+1, value))
-            print("File Creation: voice_clips%03d.wav" % (index+1))
+            print("Vocalising in %s ..." % (lang))
+            os.system('pico2wave -l %s -w voice_clips%03d.wav "%s"' % (lang, index + 1, value))
+            print("File Creation: voice_clips%03d.wav" % (index + 1))
 
     outfile = joinwavs()
     #If you have ffmpeg installed:
     #outfile = wav2mp3()
-
-    return "\nText-To-Speech Finished.\nOutput File = %s" % outfile
 
 def print_usage():
 	print(
@@ -177,10 +174,12 @@ fr-FR   French
 it-IT   Italian
 
 Help option:
--h,--help   show this message''' % default_lang )
+-h,--help   show this message''' % default_lang)
 
 def main(argv):
     lang = ''
+    input_text_file = ''
+
     try:
         opts, args = getopt.getopt(argv, "hi:l:", ["help", "input_text_file=", "lang="])
     except getopt.GetoptError:
@@ -196,9 +195,15 @@ def main(argv):
             print_usage()
             sys.exit()
         elif opt in ('-i', '--input_text_file'):
-            txt = text_file(arg)
+            input_text_file = arg
+            txt = text_file(input_text_file)
 
     print(text_to_speech(txt,lang))
 
+    input_text_file = input_text_file[:-4]
+    os.system('mv audio_book.wav %s.wav' % input_text_file)
+
+    print('Output file = %s.wav' % input_text_file)
+
 if __name__ == "__main__":
-   main(sys.argv[1:])
+    main(sys.argv[1:])
