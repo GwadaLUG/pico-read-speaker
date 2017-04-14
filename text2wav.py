@@ -4,7 +4,7 @@
 #exec : text2wav.py
 
 u"""
-Auteur  : Mickaelh
+Auteur  : Mickaelh, UtkarshKunwar
 version : 1.1.0
 Licence : GPL v3
 
@@ -45,17 +45,12 @@ TODO:
 
 
 
-import os, sys, gtk, getopt, wave
+import os, sys, getopt, wave
 
 #limit char of pico2wave
 limit_char = 30000
 #choose default language between: 'en-US','en-GB','de-DE','es-ES','fr-FR','it-IT'
 default_lang = 'en-GB'
-
-# get text from (ctrl + c)
-def text_clipboard():
-    clipboard = gtk.clipboard_get()
-    return clipboard.wait_for_text()
 
 #get text from file
 def text_file(arg):
@@ -90,12 +85,12 @@ def casier_txt(list_txt):
 
     return list_chapter
 
-def joinwavs(outfile = "chapter.wav"):
+def joinwavs(outfile = "audio_book.wav"):
     infiles = []
 
     for root, dirs, files in os.walk(os.getcwd()):
         for f in files:
-            if f.startswith('article') and f.endswith('.wav'):
+            if f.startswith('voice_clips') and f.endswith('.wav'):
                 infiles.append(f)
 
     if len(infiles) > 1:
@@ -115,7 +110,7 @@ def joinwavs(outfile = "chapter.wav"):
         os.system('mv %s %s' % (infiles[0], outfile))
     return outfile
 
-def wav2mp3(infile = "chapter.wav"):
+def wav2mp3(infile = "audio_book.wav"):
     outfile = ' %s.mp3' % infile[:-4]
     os.system('ffmpeg -i %s %s' % (infile, outfile))
     os.system('rm %s' % infile)
@@ -142,19 +137,19 @@ def text_to_speech(txt,lang):
     else:
         return "No sentence"
 
-    os.system('rm article*.wav')
+    os.system('rm voice_clips*.wav')
     for index,value in enumerate(position):
         if value:
             value =' '.join(value)
             print("Translating in %s ..." % (lang))
-            os.system('pico2wave -l %s -w article%02d.wav "%s"' % (lang, index+1, value))
-            print("File Creation: article%02d.wav" % (index+1))
+            os.system('pico2wave -l %s -w voice_clips%05d.wav "%s"' % (lang, index+1, value))
+            print("File Creation: voice_clips%05d.wav" % (index+1))
 
     outfile = joinwavs()
     #If you have ffmpeg installed:
     #outfile = wav2mp3()
 
-    return "Speech complete!. The result is in: %s" % outfile
+    return "\nText-To-Speech Finished.\nOutput File = %s" % outfile
 
 def print_usage():
 	print(
@@ -179,26 +174,21 @@ Help option:
 def main(argv):
     lang = ''
     try:
-        opts, args = getopt.getopt(argv,"hi:l:",["help","input_text_file=","lang="])
+        opts, args = getopt.getopt(argv, "hi:l:", ["help", "input_text_file=", "lang="])
     except getopt.GetoptError:
         sys.exit(2)
 
-    if opts:
-        for opt, arg in opts:
-            if opt in ("-l","--lang"):
-                lang = arg
-            else:
-                lang = default_lang
+    for opt, arg in opts:
+        if opt in ('-l', '--lang'):
+            lang = arg
+        else:
+            lang = default_lang
 
-            if opt in ("-h","--help"):
-                print_usage()
-                sys.exit()
-            elif opt in ("-i", "--input_text_file"):
-                txt = text_file(arg)
-            else:
-                txt = text_clipboard()
-    else:
-        txt = text_clipboard()
+        if opt in ('-h', '--help'):
+            print_usage()
+            sys.exit()
+        elif opt in ('-i', '--input_text_file'):
+            txt = text_file(arg)
 
     print(text_to_speech(txt,lang))
 
