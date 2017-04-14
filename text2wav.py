@@ -4,7 +4,7 @@
 #exec : text2wav.py
 
 u"""
-Auteur  : Mickaelh
+Auteur  : Mickaelh, UtkarshKunwar
 version : 1.1.0
 Licence : GPL v3
 
@@ -45,17 +45,12 @@ TODO:
 
 
 
-import os, sys, gtk, getopt, wave
+import os, sys, getopt, wave
 
 #limit char of pico2wave
 limit_char = 30000
 #choose default language between: 'en-US','en-GB','de-DE','es-ES','fr-FR','it-IT'
 default_lang = 'en-US'
-
-# get text from (ctrl + c)
-def text_clipboard():
-    clipboard = gtk.clipboard_get()
-    return clipboard.wait_for_text()
 
 #get text from file
 def text_file(arg):
@@ -163,18 +158,15 @@ def main(argv):
     except getopt.GetoptError:
         sys.exit(2)
 
-    if opts:
-        for opt, arg in opts:
-            if opt in ('-l','--lang'):
-                lang = arg
-            else:
-                lang = default_lang
+    for opt, arg in opts:
+        if opt in ('-l','--lang'):
+            lang = arg
+        else:
+            lang = default_lang
 
-            if opt in ('-h','--help'):
-                print(
+        if opt in ('-h','--help'):
+            print(
 '''Usage: text2wav.py [option] [-i|--input_text_file text_file]
-
-Without -i option verifies if there is a text copied to clipboard
 
 Options:
     -i, --input_text_file   reads a text file
@@ -190,14 +182,10 @@ Options lang:
 
 Help option:
     -h,--help   show this message'''
-                % default_lang )
-                sys.exit()
-            elif opt in ('-i', '--input_text_file'):
-                txt = text_file(arg)
-            else:
-                txt = text_clipboard()
-    else:
-        txt = text_clipboard()
+            % default_lang )
+            sys.exit()
+        elif opt in ('-i', '--input_text_file'):
+            txt = text_file(arg)
 
     print(text_to_speech(txt,lang))
 
