@@ -50,7 +50,7 @@ import os, sys, gtk, getopt, wave
 #limit char of pico2wave
 limit_char = 30000
 #choose default language between: 'en-US','en-GB','de-DE','es-ES','fr-FR','it-IT'
-default_lang = 'en-US'
+default_lang = 'en-GB'
 
 # get text from (ctrl + c)
 def text_clipboard():
@@ -156,6 +156,26 @@ def text_to_speech(txt,lang):
 
     return "Speech complete!. The result is in: %s" % outfile
 
+def print_usage():
+	print(
+	'''Usage: text2wav.py [option] [-i|--input_text_file text_file]
+Without -i option verifies if there is a text copied to clipboard
+
+Options:
+-i, --input_text_file   reads a text file
+-l, --lang  Language (default: "%s")
+
+Options lang:
+en-US   English
+en-GB   Great Britain
+de-DE   German
+es-ES   Spanish
+fr-FR   French
+it-IT   Italian
+
+Help option:
+-h,--help   show this message''' % default_lang )
+
 def main(argv):
     lang = ''
     try:
@@ -165,34 +185,15 @@ def main(argv):
 
     if opts:
         for opt, arg in opts:
-            if opt in ('-l','--lang'):
+            if opt in ("-l","--lang"):
                 lang = arg
             else:
                 lang = default_lang
 
-            if opt in ('-h','--help'):
-                print(
-'''Usage: text2wav.py [option] [-i|--input_text_file text_file]
-
-Without -i option verifies if there is a text copied to clipboard
-
-Options:
-    -i, --input_text_file   reads a text file
-    -l, --lang  Language (default: "%s")
-
-Options lang:
-    en-US   English
-    en-GB   Great Britain
-    de-DE   German
-    es-ES   Spanish
-    fr-FR   French
-    it-IT   Italian
-
-Help option:
-    -h,--help   show this message'''
-                % default_lang )
+            if opt in ("-h","--help"):
+                print_usage()
                 sys.exit()
-            elif opt in ('-i', '--input_text_file'):
+            elif opt in ("-i", "--input_text_file"):
                 txt = text_file(arg)
             else:
                 txt = text_clipboard()
