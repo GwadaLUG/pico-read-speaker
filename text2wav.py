@@ -145,8 +145,8 @@ def text_to_speech(txt,lang):
         if value:
             value =' '.join(value)
             print("Translating in %s ..." % (lang))
-            os.system('pico2wave -l %s -w voice_clips%05d.wav "%s"' % (lang, index+1, value))
-            print("File Creation: voice_clips%05d.wav" % (index+1))
+            os.system('pico2wave -l %s -w voice_clips%03d.wav "%s"' % (lang, index+1, value))
+            print("File Creation: voice_clips%03d.wav" % (index+1))
 
     outfile = joinwavs()
     #If you have ffmpeg installed:
