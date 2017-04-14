@@ -47,6 +47,9 @@ TODO:
 
 import os, sys, getopt, wave
 
+reload(sys)
+sys.setdefaultencoding('utf8')
+
 #limit char of pico2wave
 limit_char = 30000
 #choose default language between: 'en-US','en-GB','de-DE','es-ES','fr-FR','it-IT'
