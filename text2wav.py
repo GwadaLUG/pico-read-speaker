@@ -151,6 +151,26 @@ def text_to_speech(txt,lang):
 
     return "\nText-To-Speech Finished.\nOutput File = %s" % outfile
 
+def print_usage():
+	print(
+	'''Usage: text2wav.py [option] [-i|--input_text_file text_file]
+Without -i option verifies if there is a text copied to clipboard
+
+Options:
+-i, --input_text_file   reads a text file
+-l, --lang  Language (default: "%s")
+
+Options lang:
+en-US   English
+en-GB   Great Britain
+de-DE   German
+es-ES   Spanish
+fr-FR   French
+it-IT   Italian
+
+Help option:
+-h,--help   show this message''' % default_lang )
+
 def main(argv):
     lang = ''
     try:
