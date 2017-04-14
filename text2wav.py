@@ -96,6 +96,8 @@ def joinwavs(outfile = "audio_book.wav"):
             if f.startswith('voice_clips') and f.endswith('.wav'):
                 infiles.append(f)
 
+    infiles = sorted(infiles)
+
     if len(infiles) > 1:
         data = []
         for infile in infiles:
@@ -111,6 +113,9 @@ def joinwavs(outfile = "audio_book.wav"):
     else:
         os.system('rm %s' % outfile)
         os.system('mv %s %s' % (infiles[0], outfile))
+
+    os.system('rm voice_clips*.wav')
+
     return outfile
 
 def wav2mp3(infile = "audio_book.wav"):
