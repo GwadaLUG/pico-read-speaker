@@ -3,7 +3,7 @@
 #Transform text in wav audio
 #exec : text2wav.py
 
-import os, sys, getopt, wave
+import os, sys, getopt
 
 reload(sys)
 sys.setdefaultencoding('utf8')
@@ -46,42 +46,6 @@ def casier_txt(list_txt):
 
     return list_chapter
 
-def joinwavs(outfile = "audio_book.wav"):
-    infiles = []
-
-    for root, dirs, files in os.walk(os.getcwd()):
-        for f in files:
-            if f.startswith('voice_clips') and f.endswith('.wav'):
-                infiles.append(f)
-
-    infiles = sorted(infiles)
-
-    if len(infiles) > 1:
-        data = []
-        for infile in infiles:
-            w = wave.open(infile, 'rb')
-            data.append( [w.getparams(), w.readframes(w.getnframes())] )
-            w.close()
-
-        output = wave.open(outfile, 'wb')
-        output.setparams(data[0][0])
-        for params,frames in data:
-            output.writeframes(frames)
-        output.close()
-    else:
-        os.system('rm %s' % outfile)
-        os.system('mv %s %s' % (infiles[0], outfile))
-
-    os.system('rm voice_clips*.wav')
-
-    return outfile
-
-def wav2mp3(infile = "audio_book.wav"):
-    outfile = ' %s.mp3' % infile[:-4]
-    os.system('ffmpeg -i %s %s' % (infile, outfile))
-    os.system('rm %s' % infile)
-    return outfile
-
 # execute command line pico2wave
 def text_to_speech(txt, lang):
     list_lang = ['en-US', 'en-GB', 'de-DE', 'es-ES', 'fr-FR', 'it-IT']
@@ -103,16 +67,13 @@ def text_to_speech(txt, lang):
     else:
         return "No sentence"
 
+    os.system('ln -s /dev/stdout /tmp/out.wav')
     for index,value in enumerate(position):
         if value:
             value =' '.join(value)
             print("Vocalising in %s ..." % (lang))
-            os.system('pico2wave -l %s -w voice_clips%03d.wav "%s"' % (lang, index + 1, value))
-            print("File Creation: voice_clips%03d.wav" % (index + 1))
-
-    outfile = joinwavs()
-    #If you have ffmpeg installed:
-    #outfile = wav2mp3()
+            os.system('pico2wave -l %s -w /tmp/out.wav "%s" | ffmpeg -i - -ar 48000 -ac 1 -ab 64k -f mp3 %d.mp3 -y' % (lang, value, index + 1))
+            os.system('cat %d.mp3 >> audio_book.mp3 && rm %d.mp3' % (index + 1, index + 1))
 
 def print_usage():
 	print(
@@ -159,9 +120,9 @@ def main(argv):
     print(text_to_speech(txt,lang))
 
     input_text_file = input_text_file[:-4]
-    os.system('mv audio_book.wav %s.wav' % input_text_file)
+    os.system('mv audio_book.mp3 %s.mp3' % input_text_file)
 
-    print('Output file = %s.wav' % input_text_file)
+    print('Output file = %s.mp3' % input_text_file)
 
 if __name__ == "__main__":
     main(sys.argv[1:])
