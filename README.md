@@ -1,52 +1,55 @@
-Pico_read_speaker
-=================
+txt2wave
+=========
 
-Using Pico2wave to ease from the recovery text to the clipboard or a file so unlimited.
+This program converts a text file to a .wav file. For this linux software Pico2Wave is used. What Pico2Wave does is that it takes limited number of characters for text-to-speech conversion. This program solves this problem.
 
-Pico2wave takes into account a limited number of characters, my program solves this problem.
-
-Why this script: I love listening to my book on my mobile N900 while I
-    drove on the road to work
-
-
-Auteur : Mickaelh
-version : 1.0.0
-Licence : GPL v3
-
-required
-========
+Prerequisites
+==============
 
 System : the compliant systems under linux kernels: Debian, Ubuntu, Maemo ...
 
-The SVOX Pico engine is a software speech synthesizer for German, English (GB
- and US), Spanish, French and Italian.
+The SVOX Pico engine is a software speech synthesizer for German, English (GB and US), Spanish, French and Italian.
 
 Installation required :
 
     - svox (pico2wave) https://packages.debian.org/source/squeeze/svox
-    - Python install gtk: $ sudo apt-get install python-gtk2-dev
 
 Svox package maemo dispnible on https://openrepos.net/
 
-installation order:
+Installation order:
 
     - libttspico-data (https://openrepos.net/content/mickaelh/libttspico-data)
     - libttspico0 (https://openrepos.net/content/mickaelh/libttspico0)
     - libttspico-utils (https://openrepos.net/content/mickaelh/libttspico-utils)
     - libttspico-dev (https://openrepos.net/content/mickaelh/libttspico-dev)
-
-How to use this script
-======================
-
-selected your text and copy (ctrl+c) and executed a command terminal
-
-    $ ./text2wav.py [-l|--lang fr-FR]
     or
-    $ ./text2wav.py -i <input text file> [-l|--lang fr-FR]
+    - sudo apt-get install libttspico0 libttspico-utils libttspico-data
 
-note:
-the optional parameter [-l | --lang] by default = en-US
+Usage
+=======
 
-In the current directory of "text2wav.py" it will generate the article1.wav file article2.wav ...
+There are options given for the command-line input, which would basically provide the user specifications of what type of speech does he/she wants. The options are as follows :
 
-Good listening.
+    Options:
+        -i, --input_text_file   reads a text file
+        -l, --lang  Language (default: default_lang)
+
+    Options for languages :
+        en-US   English
+        en-GB   Great Britain
+        de-DE   German
+        es-ES   Spanish
+        fr-FR   French
+        it-IT   Italian
+
+    Command-line Input Type:
+
+    $ ./text2wav.py [-i|--input_text_file] <input text file name> [-l|--lang fr-FR]
+
+    Help Option :
+        -h, --Help  Show this message
+
+NOTE:
+the optional parameter [-l | --lang] by default = en-GB
+
+In the current directory of "text2wav.py" it will generate the audio_book.wav file.
