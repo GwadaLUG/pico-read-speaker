@@ -3,48 +3,6 @@
 #Transform text in wav audio
 #exec : text2wav.py
 
-u"""
-Auteur  : Mickaelh, UtkarshKunwar
-version : 1.1.0
-Licence : GPL v3
-
-Description : Using pico2wave to ease from the recovery text to the
-    clipboard or a file so unlimited.
-    pico2wave takes into account a limited number of characters, my program solves this problem.
-
-System : the compliant systems under linux kernels: Debian, Ubuntu, Maemo ...
-
-Installation required :
-    - svox (pico2wave) https://packages.debian.org/source/squeeze/svox
-    - Python install gtk : $ sudo apt-get install python-gtk2-dev
-
-Svox package maemo dispnible on https://openrepos.net/
-installation order:
-    - libttspico-data (https://openrepos.net/content/mickaelh/libttspico-data)
-    - libttspico0 (https://openrepos.net/content/mickaelh/libttspico0)
-    - libttspico-utils (https://openrepos.net/content/mickaelh/libttspico-utils)
-    - libttspico-dev (https://openrepos.net/content/mickaelh/libttspico-dev)
-
-
-Why this script: I love listening to my book on my mobile N900 while I
-    drove on the road to work
-
-
-How to use this script:
-    - selected your text and copy (ctrl + c) and executed a command terminal
-    $ ./text2wav.py
-
-In the current directory of text2wav.py it will generate only one file, named chapter.wav
-I you want it in mp3 and you have ffmpeg installed, uncomment line 155
-Good listening.
-
-TODO:
-    Development of the text file part and manage multiple text file so
-    ilimiter vocalize books completely.
-"""
-
-
-
 import os, sys, getopt, wave
 
 reload(sys)
