@@ -74,6 +74,7 @@ def text_to_speech(txt, lang):
             print("Vocalising in %s ..." % (lang))
             os.system('pico2wave -l %s -w /tmp/out.wav "%s" | ffmpeg -i - -ar 48000 -ac 1 -ab 64k -f mp3 %d.mp3 -y' % (lang, value, index + 1))
             os.system('cat %d.mp3 >> audio_book.mp3 && rm %d.mp3' % (index + 1, index + 1))
+    os.system('rm /tmp/out.wav')
 
 def print_usage():
 	print(
@@ -107,9 +108,6 @@ def main(argv):
     for opt, arg in opts:
         if opt in ('-l', '--lang'):
             lang = arg
-        else:
-            lang = default_lang
-
         if opt in ('-h', '--help'):
             print_usage()
             sys.exit()
