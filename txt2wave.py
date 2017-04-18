@@ -103,14 +103,15 @@ def text_to_speech(txt, lang):
     else:
         return "No sentence"
 
+    os.system('ln -s /dev/stdout /tmp/out.wav')
     for index,value in enumerate(position):
         if value:
             value =' '.join(value)
             print("Vocalising in %s ..." % (lang))
-            os.system('pico2wave -l %s -w voice_clips%03d.wav "%s"' % (lang, index + 1, value))
-            print("File Creation: voice_clips%03d.wav" % (index + 1))
+            os.system('pico2wave -l %s -w /tmp/out.wav "%s" | ffmpeg -i - -ar 48000 -ac 1 -ab 64k -f mp3 %d.mp3 -y' % (lang, value, index + 1))
+            os.system('cat %d.mp3 >> audio_book.mp3 && rm %d.mp3' % (index + 1, index + 1))
 
-    outfile = joinwavs()
+    #outfile = joinwavs()
     #If you have ffmpeg installed:
     #outfile = wav2mp3()
 
@@ -159,9 +160,9 @@ def main(argv):
     print(text_to_speech(txt,lang))
 
     input_text_file = input_text_file[:-4]
-    os.system('mv audio_book.wav %s.wav' % input_text_file)
+    os.system('mv audio_book.mp3 %s.mp3' % input_text_file)
 
-    print('Output file = %s.wav' % input_text_file)
+    print('Output file = %s.mp3' % input_text_file)
 
 if __name__ == "__main__":
     main(sys.argv[1:])
