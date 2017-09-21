@@ -83,6 +83,7 @@ Without -i option verifies if there is a text copied to clipboard
 
 Options:
 -i, --input_text_file   reads a text file
+-o, --output-folder   destination folder (defaults to current folder)
 -l, --lang  Language (default: "%s")
 
 Options lang:
@@ -99,18 +100,22 @@ Help option:
 def main(argv):
     lang = ''
     input_text_file = ''
+    output_folder = ''
 
     try:
-        opts, args = getopt.getopt(argv, "hi:l:", ["help", "input_text_file=", "lang="])
+        opts, args = getopt.getopt(argv, "hi:l:o:", ["help", "input_text_file=", "lang=", "output-folder="])
     except getopt.GetoptError:
         sys.exit(2)
 
     for opt, arg in opts:
-        if opt in ('-l', '--lang'):
-            lang = arg
         if opt in ('-h', '--help'):
             print_usage()
             sys.exit()
+            
+        if opt in ('-l', '--lang'):
+            lang = arg
+        elif opt in ('-o', '--output-folder'):
+            output_folder = arg
         elif opt in ('-i', '--input_text_file'):
             input_text_file = arg
             txt = text_file(input_text_file)
@@ -118,7 +123,7 @@ def main(argv):
     print(text_to_speech(txt,lang))
 
     input_text_file = input_text_file[:-4]
-    os.system('mv audio_book.mp3 %s.mp3' % input_text_file)
+    os.system('mv audio_book.mp3 %s.mp3' %(input_text_file if not output_folder else '%s/%s' % (output_folder, input_text_file)))
 
     print('Output file = %s.mp3' % input_text_file)
 
