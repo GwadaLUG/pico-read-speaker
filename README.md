@@ -32,6 +32,7 @@ There are options given for the command-line input, which would basically provid
 
     Options:
         -i, --input_text_file   reads a text file
+        -o, --output-folder   destination folder (defaults to current folder)
         -l, --lang  Language (default: default_lang)
 
     Options for languages :
@@ -44,7 +45,7 @@ There are options given for the command-line input, which would basically provid
 
     Command-line Input Type:
 
-    $ ./text2wav.py [-i|--input_text_file] <input text file name> [-l|--lang fr-FR]
+    $ ./text2wav.py [-i|--input_text_file] <input text file name> [-l|--lang fr-FR] [-o|--output-folder] <output directory>
 
     Help Option :
         -h, --Help  Show this message
