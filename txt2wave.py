@@ -5,9 +5,6 @@
 
 import os, sys, getopt
 
-reload(sys)
-sys.setdefaultencoding('utf8')
-
 #limit char of pico2wave
 limit_char = 30000
 #choose default language between: 'en-US','en-GB','de-DE','es-ES','fr-FR','it-IT'
@@ -59,7 +56,7 @@ def text_to_speech(txt, lang):
         list_txt = filter(None, list_txt)
     else:
         list_txt = []
-        list_txt = u"No text found."
+        list_txt.append("No text found.")
 
     if list_txt:
         position = casier_txt(list_txt)
@@ -101,6 +98,7 @@ def main(argv):
     lang = ''
     input_text_file = ''
     output_folder = ''
+    txt = ''
 
     try:
         opts, args = getopt.getopt(argv, "hi:l:o:", ["help", "input_text_file=", "lang=", "output-folder="])
@@ -120,9 +118,9 @@ def main(argv):
             input_text_file = arg
             txt = text_file(input_text_file)
 
-    print(text_to_speech(txt,lang))
+    text_to_speech(txt,lang)
 
-    input_text_file = input_text_file[:-4]
+    input_text_file = os.path.splitext(input_text_file)[0]
     os.system('mv audio_book.mp3 %s.mp3' %(input_text_file if not output_folder else '%s/%s' % (output_folder, input_text_file)))
 
     print('Output file = %s.mp3' % input_text_file)

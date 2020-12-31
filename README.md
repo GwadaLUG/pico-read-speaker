@@ -13,6 +13,7 @@ The SVOX Pico engine is a software speech synthesizer for German, English (GB an
 Installation required :
 
     - svox (pico2wave) https://packages.debian.org/source/squeeze/svox
+    - ffmpeg to convert wav to mp3 files (sudo apt-get install ffmpeg)
 
 Svox package maemo dispnible on https://openrepos.net/
 
@@ -24,6 +25,7 @@ Installation order:
     - libttspico-dev (https://openrepos.net/content/mickaelh/libttspico-dev)
     or
     - sudo apt-get install libttspico0 libttspico-utils libttspico-data
+
 
 Usage
 =======
